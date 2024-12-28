@@ -2,7 +2,6 @@ import plotly.graph_objs as go
 import plotly.io as pio
 from keys import FinKeys,FinStatement
 
-
 class Plotter:
     def __init__(self, dcf_table=None, company=None):
         self.dcf_table = dcf_table
