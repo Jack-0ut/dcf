@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-4 mb-4 text-center">DCF Valuation Results for {{ ticker.upper() }}</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="bg-white p-4 rounded shadow-sm text-center">
+                <p class="mb-1"><strong>Company Name:</strong> {{ company.name }}</p>
+                <p class="mb-1"><strong>Sector:</strong> {{ company.sector }}</p>
+                <p class="mb-1"><strong>Industry:</strong> {{ company.industry }}</p>
+                <p class="mb-1"><strong>Market Capitalization:</strong> ${{ "%.2f" | format(company.market_cap / 1e9) }} billion</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="bg-light p-4 rounded shadow-sm mb-4">
+                <h2 class="h5 mb-3 text-center">Core Financial Metrics</h2>
+                {{ core_metrics_plot | safe }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="bg-light p-4 rounded shadow-sm">
+                <h2 class="h5 mb-3">DCF Valuation Summary</h2>
+                
+                <h3 class="h6 mt-4 mb-2">Equity Value Calculation</h3>
+                <p class="mb-1"><strong>Enterprise Value (sum of DCFs):</strong> ${{ "%.2f" | format(total_dcf_value) }} billion</p>
+                <p class="mb-1"><strong>+ Cash:</strong> ${{ "%.2f" | format(cash) }} billion</p>
+                <p class="mb-1"><strong>- Debt:</strong> ${{ "%.2f" | format(debt) }} billion</p>
+                <p class="mb-3"><strong>= Equity Value:</strong> ${{ "%.2f" | format(equity_value) }} billion</p>
+                
+                <h3 class="h6 mt-4 mb-2">Intrinsic Share Price Calculation</h3>
+                <p class="mb-1"><strong>Equity Value:</strong> ${{ "%.2f" | format(equity_value) }} billion</p>
+                <p class="mb-1"><strong>/ Shares Outstanding:</strong> 
+                    {% if shares_outstanding >= 1e9 %}
+                        {{ "%.2f" | format(shares_outstanding / 1e9) }} billion
+                    {% elif shares_outstanding >= 1e6 %}
+                        {{ "%.2f" | format(shares_outstanding / 1e6) }} million
+                    {% elif shares_outstanding >= 1e3 %}
+                        {{ "%.2f" | format(shares_outstanding / 1e3) }} thousand
+                    {% else %}
+                        {{ "%.2f" | format(shares_outstanding) }} 
+                    {% endif %}
+                </p>
+                <p><strong>= Intrinsic Share Price:</strong> ${{ "%.2f" | format(intrinsic_share_price) }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-light p-4 rounded shadow-sm mb-4">
+                <h2 class="h5 mb-3 text-center">Valuation Plot</h2>
+                {{ dcf_plot | safe }}
+            </div>
+          
+            <div class="bg-light p-4 rounded shadow-sm">
+                <h2 class="h5 mb-3 text-center">DCF Table</h2>
+                {{ table | safe }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
